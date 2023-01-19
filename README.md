@@ -32,3 +32,6 @@ Reference sites:
   - https://www.tensorflow.org/lite/api_docs/python/tf/lite
   - https://coral.ai/docs/edgetpu/tflite-python/
   
+NDVI Data Sources:
+  - https://lpdaac.usgs.gov/products/mod13a3v006/#tools
+  
