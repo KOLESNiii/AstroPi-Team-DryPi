@@ -26,6 +26,12 @@ def getNumberString(int, targetLen = 3):
     while len(string) < targetLen:
         string = '0' + string
     return string
+
+def finish():
+    '''Closes the camera and ends the program.'''
+    if cameraExists:
+        camera.close()
+    exit()
         
 def main():
     timeVirtual = 0
@@ -34,6 +40,8 @@ def main():
         if timeVirtual % TIMEBETWEENPHOTOS == 0:
             imageCount = TakePicture(imageCount)
         timeVirtual += 1
+    
+main()
         
 
 
