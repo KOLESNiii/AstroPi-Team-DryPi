@@ -8,8 +8,6 @@ from time import sleep, time
 from os import makedirs, path
 from orbit import ISS
 from pathlib import Path
-
-
     
 TIMEBETWEENPHOTOS = 40 #seconds  
 RUNNINGTIME = 180 #minutes-- ideally closer to 170 for actual use to be safe
