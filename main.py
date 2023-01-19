@@ -5,16 +5,22 @@ except ImportError:
     print("Camera module does not work on this device.")
     cameraExists = False
 from time import sleep, time
+from os import makedirs, path
 
 if cameraExists:
     camera = PiCamera()
     
 TIMEBETWEENPHOTOS = 40 #seconds    
 
+def makeDirs():
+    '''Makes the folders for images and other save files.'''
+    makedirs('./images/', exist_ok = True)
+    
+
 def TakePicture(imgCount):
     '''Takes a picture and saves it to the current directory.'''
     if cameraExists:
-        camera.capture(f'image_{imgCount}.jpg')
+        camera.capture(f'./images/image_{imgCount}.jpg')
     else:
         print(f'image_{imgCount}.jpg')
     imgCount += 1
@@ -34,6 +40,7 @@ def finish():
     exit()
         
 def main():
+    makeDirs()
     timeVirtual = 0
     imageCount = 0
     for i in range(90*60):
