@@ -8,25 +8,18 @@ from time import sleep, time
 from os import makedirs, path
 from orbit import ISS
 from pathlib import Path
+import logging
     
 TIMEBETWEENPHOTOS = 40 #seconds  
 RUNNINGTIME = 180 #minutes-- ideally closer to 170 for actual use to be safe
 TESTING = True #testing mode-- artificial environments to test certain functions
 PROGRAMPATH = Path(__file__).parent.resolve() #path to this file
-
-def getTimestamp():
-    t = time()
-    today = t % 86400
-    h = today // 3600
-    tleft = today % 3600
-    m = tleft // 60
-    tleft %= 60
-    s = tleft // 60
-    return(f'{int(h)}:{int(m)}:{int(s)}')
+logging.basicConfig(filename=f'{PROGRAMPATH}/all.log', level=logging.DEBUG, format='%(asctime)s %(message)s')
 
 def MakeDirs():
     '''Makes the folders for images and other save files.'''
     makedirs(f'{PROGRAMPATH}/images/', exist_ok = True)
+    logging.info("Created directories for images and other save files.")
     
 def ConvertCoordinates(angle):
     '''
@@ -57,6 +50,7 @@ def TakePicture(camera, imgCount):
     else:
         print(f'image_{imgCount}.jpg')
     imgCount += 1
+    logging.info("Taken picture " + str(imgCount))
     return imgCount
 
 def GetNumberString(int, targetLen = 3):
@@ -68,6 +62,7 @@ def GetNumberString(int, targetLen = 3):
 
 def Finish(camera):
     '''Closes the camera and ends the program.'''
+    logging.warning("Program ended cleanly.")
     if cameraExists:
         camera.close()
     exit()
@@ -77,20 +72,23 @@ def main():
         camera = PiCamera()
         camera.resolution = (4056, 3040)
         sleep(1) #camera warmup
+        logging.info("Camera initialised.")
     elif not TESTING: #If the camera module does not work and we are not testing locally
+        logging.critical("Camera module could not be imported. Exiting.")
         raise ImportError("Camera module could not be imported. Exiting.")
     else:
         camera = None
+        logging.warning("Camera module could not be imported. Continuing in testing mode.")
     
     MakeDirs()
     imageCount = 0
     
     if TESTING:
+        logging.info("Running in testing mode.")
         timeVirtual = 0
         while timeVirtual < RUNNINGTIME*60: #90 virtual minutes
             if timeVirtual % TIMEBETWEENPHOTOS == 0:
                 imageCount = TakePicture(camera, imageCount)
-                print(getTimestamp())
             timeVirtual += 1
     else:
         lastTime = time()
