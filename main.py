@@ -14,6 +14,16 @@ RUNNINGTIME = 180 #minutes-- ideally closer to 170 for actual use to be safe
 TESTING = True #testing mode-- artificial environments to test certain functions
 PROGRAMPATH = Path(__file__).parent.resolve() #path to this file
 
+def getTimestamp():
+    t = time()
+    today = t % 86400
+    h = today // 3600
+    tleft = today % 3600
+    m = tleft // 60
+    tleft %= 60
+    s = tleft // 60
+    return(f'{int(h)}:{int(m)}:{int(s)}')
+
 def MakeDirs():
     '''Makes the folders for images and other save files.'''
     makedirs(f'{PROGRAMPATH}/images/', exist_ok = True)
@@ -80,6 +90,7 @@ def main():
         while timeVirtual < RUNNINGTIME*60: #90 virtual minutes
             if timeVirtual % TIMEBETWEENPHOTOS == 0:
                 imageCount = TakePicture(camera, imageCount)
+                print(getTimestamp())
             timeVirtual += 1
     else:
         lastTime = time()
