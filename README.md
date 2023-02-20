@@ -25,6 +25,9 @@ Modules we can use:
   - sense_hat
   - pisense
 
+Reference Data (includes NoIR images):
+  - https://drive.google.com/file/d/1-x9Q3nyOsP9nvNxsqJGKS-uJ9MJe2j8d/view
+
 Reference sites:
   - https://projects.raspberrypi.org/en/projects/code-for-your-astro-pi-mission-space-lab-experiment/0
   - https://projects.raspberrypi.org/en/projects/astropi-ndvi
