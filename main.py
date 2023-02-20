@@ -2,7 +2,7 @@ try:
     from picamera import PiCamera
     cameraExists = True
 except ImportError:
-    print("Camera module does not work on this device.")
+    logging.warning("Camera module could not be imported on this device.")
     cameraExists = False
 from time import sleep, time
 from os import makedirs, path
@@ -48,7 +48,7 @@ def TakePicture(camera, imgCount):
         camera.capture(f'{PROGRAMPATH}/images/image_{imgCount}.jpg')
         sleep(2) #camera processing time
     else:
-        print(f'image_{imgCount}.jpg')
+        pass
     imgCount += 1
     logging.info("Taken picture " + str(imgCount))
     return imgCount
