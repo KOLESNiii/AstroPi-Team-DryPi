@@ -3,20 +3,22 @@ from os import makedirs, path
 from orbit import ISS
 from pathlib import Path
 import logging, csv
+
+    
+TIMEBETWEENPHOTOS = 40 #seconds  
+TIMEBETWEENDATALOGS = 10 #seconds
+RUNNINGTIME = 180 #minutes-- ideally closer to 170 for actual use to be safe
+TESTING = True #testing mode-- artificial environments to test certain functions
+VIRTUALTIMEGAP = 0.5   #second gap between each virtual "second" in testing mode
+PROGRAMPATH = Path(__file__).parent.resolve() #path to this file
+logging.basicConfig(filename=f'{PROGRAMPATH}/all.log', level=logging.DEBUG, filemode="w",format='%(asctime)s %(message)s')
+
 try:
     from picamera import PiCamera
     cameraExists = True
 except ImportError:
     logging.warning("Camera module could not be imported on this device.")
     cameraExists = False
-    
-TIMEBETWEENPHOTOS = 40 #seconds  
-TIMEBETWEENDATALOGS = 10 #seconds
-RUNNINGTIME = 180 #minutes-- ideally closer to 170 for actual use to be safe
-TESTING = True #testing mode-- artificial environments to test certain functions
-VIRTUALTIMEGAP = 0.1 #second gap between each virtual "second" in testing mode
-PROGRAMPATH = Path(__file__).parent.resolve() #path to this file
-logging.basicConfig(filename=f'{PROGRAMPATH}/all.log', level=logging.DEBUG, format='%(asctime)s %(message)s')
 
 def addCSVEntry(imageTaken = False, imgNum = None):
     '''Adds a row to the CSV file with the given data.'''
