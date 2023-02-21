@@ -72,8 +72,6 @@ def TakePicture(camera, imgCount):
         camera.exif_tags['GPS.GPSLongitudeRef'] = 'W' if longAngle < 0 else 'E' #if negative, is W
         camera.capture(f'{PROGRAMPATH}/images/image_{imgCount}.jpg')
         sleep(2) #camera processing time
-    else:
-        pass
     imgCount += 1
     logging.info("Taken picture " + str(imgCount))
     return imgCount
