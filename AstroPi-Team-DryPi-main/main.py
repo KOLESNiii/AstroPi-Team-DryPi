@@ -10,10 +10,10 @@ except ImportError:
     logging.warning("Camera module could not be imported on this device.")
     cameraExists = False
     
-TIMEBETWEENPHOTOS = 40 #seconds  
+TIMEBETWEENPHOTOS = 5 #seconds  
 TIMEBETWEENDATALOGS = 10 #seconds
 RUNNINGTIME = 180 #minutes-- ideally closer to 170 for actual use to be safe
-TESTING = True #testing mode-- artificial environments to test certain functions
+TESTING = False #testing mode-- artificial environments to test certain functions
 VIRTUALTIMEGAP = 0.1 #second gap between each virtual "second" in testing mode
 PROGRAMPATH = Path(__file__).parent.resolve() #path to this file
 logging.basicConfig(filename=f'{PROGRAMPATH}/all.log', level=logging.DEBUG, format='%(asctime)s %(message)s')
@@ -71,7 +71,7 @@ def TakePicture(camera, imgCount):
         camera.exif_tags['GPS.GPSLatitudeRef'] = 'S' if latAngle < 0 else 'N' #if negative, is S
         camera.exif_tags['GPS.GPSLongitudeRef'] = 'W' if longAngle < 0 else 'E' #if negative, is W
         camera.capture(f'{PROGRAMPATH}/images/image_{imgCount}.jpg')
-        sleep(2) #camera processing time
+        sleep(1) #camera processing time
     imgCount += 1
     logging.info("Taken picture " + str(imgCount))
     return imgCount
@@ -93,7 +93,8 @@ def Finish(camera):
 def main():
     if cameraExists:
         camera = PiCamera()
-        camera.resolution = (4056, 3040)
+        camera.resolution = (3072, 2048)
+        
         sleep(1) #camera warmup
         logging.info("Camera initialised.")
     elif not TESTING: #If the camera module does not work and we are not testing locally
@@ -123,14 +124,14 @@ def main():
         lastImageTime = time()
         lastDataLogTime = time()
         startTime = time()
-        while time() - startTime <= RUNNINGTIME*60: #180 minutes
-            if time() - lastImageTime >= TIMEBETWEENPHOTOS:
+        while (time() - startTime) <= RUNNINGTIME*60: #180 minutes
+            if (time() - lastImageTime) >= TIMEBETWEENPHOTOS:
                 imageCount = TakePicture(camera, imageCount)
                 addCSVEntry(True, imageCount)
                 lastImageTime = time()
-            if time() - lastDataLogTime >= TIMEBETWEENDATALOGS:
-                addCSVEntry(imgNum=imageCount)
-                lastDataLogTime = time()
+            #if (time() - lastDataLogTime) >= TIMEBETWEENDATALOGS:
+            #    addCSVEntry(imgNum=imageCount)
+            #    lastDataLogTime = time()
         
     Finish(camera)
     
