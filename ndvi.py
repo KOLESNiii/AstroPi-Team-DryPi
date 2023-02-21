@@ -6,10 +6,6 @@ from os import makedirs
 
 PROGRAMPATH = Path(__file__).parent.resolve() #path to this file
 
-
-img = cv2.imread(f'{PROGRAMPATH}\images_testing\photo_01157.jpg')
-
-
 def increase_contrast(img):
     input_min = np.percentile(img, 5)
     input_max = np.percentile(img, 95)
@@ -65,5 +61,5 @@ def convert_all(path):
 
 for image in PROGRAMPATH.glob('images_testing/*.jpg'):
     convert_all(str(image))
-#convert_all("F:\AstroPi-Team-DryPi\raspberry-pi-NOIR-vs-normal-camera-0004-daytime-comparison.jpg")
+
 
