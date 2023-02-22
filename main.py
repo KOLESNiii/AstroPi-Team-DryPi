@@ -5,11 +5,11 @@ from pathlib import Path
 import logging, csv
 
     
-TIMEBETWEENPHOTOS = 40 #seconds  
+TIMEBETWEENPHOTOS = 30 #seconds  
 TIMEBETWEENDATALOGS = 10 #seconds
-RUNNINGTIME = 180 #minutes-- ideally closer to 170 for actual use to be safe
+RUNNINGTIME = 178 #minutes-- ideally closer to 170 for actual use to be safe
 TESTING = True #testing mode-- artificial environments to test certain functions
-VIRTUALTIMEGAP = 0.5   #second gap between each virtual "second" in testing mode
+VIRTUALTIMEGAP = 1   #second gap between each virtual "second" in testing mode
 PROGRAMPATH = Path(__file__).parent.resolve() #path to this file
 logging.basicConfig(filename=f'{PROGRAMPATH}/all.log', level=logging.DEBUG, filemode="w",format='%(asctime)s %(message)s')
 
@@ -51,7 +51,7 @@ def ConvertCoordinates(angle):
     return str(coordinate)
 
 def getLocation(advanced = False):
-    '''Returns the current location of the ISS as a tuple of (latitude, longitude).'''
+    '''Returns the current location of the ISS as a tuple of (latitude, longitude, (latitude sign, longitude sign)).'''
     currentLocation = ISS.coordinates()
     latitude = ConvertCoordinates(currentLocation.latitude)
     longitude = ConvertCoordinates(currentLocation.longitude)
@@ -95,9 +95,21 @@ def Finish(camera):
 def main():
     if cameraExists:
         camera = PiCamera()
-        camera.resolution = (4056, 3040)
+
+        allowed = False 
+        resolutions = [(4056, 3040), (3840, 2160), (3072, 2048), (2592, 1944), (1920, 1080), (1640, 1232), (1296, 972), (640, 480)]
+        next_try = 0
+        while not allowed: #try to set the camera resolution to the highest possible, as we encountered out of memory errors when testing on high resolutions
+            try:
+                camera.resolution = resolutions[next_try]
+            except:
+                next_try += 1
+                continue
+            allowed = True
+
         sleep(1) #camera warmup
         logging.info("Camera initialised.")
+
     elif not TESTING: #If the camera module does not work and we are not testing locally
         logging.critical("Camera module could not be imported. Exiting.")
         raise ImportError("Camera module could not be imported. Exiting.")
